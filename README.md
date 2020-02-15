@@ -15,11 +15,17 @@ To run the program, for example on [pr-63247], first go to the @craterbot's
 [completion message], and then [open the full report][full-report]. Once there,
 go to the [downloads] section, click on [regressed crates] to get the
 `regressed.tar.gz` file. Now extract the file into the directory `regressed`.
-Inside `my_dir` there should be `reg` and `gh` for crates.io and GitHub respectively.
-Once done, compile and run `crater-cat-errors` using:
 
-```
-cargo build && RUST_LOG=info ./target/debug/crater-cat-errors ./regressed/reg report.md
+The script below, as of this writing, will do this (where `RUN_ID` is the crater
+run name). `PART_ID` can be found by going to any regression link; it is the
+`end=` parameter to crater (e.g., `beta-2020-02-05` for the 1.42 crater run).
+
+```bash
+RUN_ID=beta-1.42-1
+PART_ID=beta-2020-02-05
+wget https://crater-reports.s3.amazonaws.com/$RUN_ID/logs-archives/regressed.tar.gz
+tar xf regressed.tar.gz
+RUST_LOG=info cargo run -- $RUN_ID/$PART_ID=./regressed
 ```
 
 Your report will now be in `report.md`.
